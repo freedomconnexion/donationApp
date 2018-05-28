@@ -3,33 +3,42 @@
       <p class="display-1">About me...</p>
       <v-text-field
         v-model="firstName"
-        :value="firstName"
+        :error-messages="firstNameErrors"
         placeholder="First Name"
         width="55"
       />
       <v-text-field
         v-model="lastName"
+        :error-messages="lastNameErrors"
         placeholder="Last Name"
         width="55"
       />
       <v-text-field
         v-model="email"
+        :error-messages="emailErrors"
         placeholder="Email Address"
         width="55"
       />
       <v-text-field
         v-model="streetAddress"
+        :error-messages="streetAddressErrors"
         placeholder="Street Address"
         width="55"
       />
       <v-text-field
         v-model="city"
+        :error-messages="cityErrors"
         placeholder="City"
         width="55"
       />
-      <v-select v-model="state" :items="stateAbbreviations" /> 
+      <v-select 
+        v-model="state" 
+        :error-messages="stateErrors"
+        :items="stateAbbreviations" 
+      /> 
       <v-text-field
         v-model="zipcode"
+        :error-messages="zipcodeErrors"
         placeholder="Zip Code"
         width="9"
       />
@@ -40,6 +49,7 @@
 
 <script>
   import DonationAmountBar from './DonationAmountBar';
+  import { required, minLength, email } from 'vuelidate/lib/validators';
   import _ from 'lodash';
   const stateNames = [
     "AK",
@@ -105,28 +115,29 @@
     },
     data () {
       return {
-        info: { 
-          firstName: '',
-          lastName: '',
-          emailAddress: '',
-          address: '',
-          city: '',
-          state: 'MA',
-          zipcode: '',
-          
-        },
         title: 'Vuetify.js',
       }
+    },
+    validations: {
+      firstName: { required },
+      lastName: { required },
+      email: { required, email },
+      streetAddress: { required },
+      city: { required },
+      state: { required },
+      zipcode: { required },
     },
     computed: {
       firstName: {
         get() {
-          console.log('i am getting got')
           return this.$store.getters.firstName
         },
         set(value) {
           this.$store.commit('updateFirstName', value)
         }
+      },
+      firstNameErrors() {
+        return this.surfaceErrors(this.$v.firstName, "first name");
       },
       lastName: {
         get() {
@@ -136,6 +147,9 @@
           this.$store.commit('updateLastName', value)
         }
       },
+      lastNameErrors() {
+        return this.surfaceErrors(this.$v.lastName, "last name");
+      },
       email: {
         get() {
           return this.$store.getters.email
@@ -143,6 +157,14 @@
         set(value) {
           this.$store.commit('updateEmail', value)
         }
+      },
+      emailErrors() {
+        const errors = []
+        const validatorField = this.$v.email;
+        if (!validatorField.$dirty) return errors
+        !validatorField.required && errors.push(`Please enter your email address`)
+        !validatorField.email && errors.push('Please enter a valid email address')
+        return errors
       },
       streetAddress: {
         get() {
@@ -152,6 +174,9 @@
           this.$store.commit('updateStreetAddress', value)
         }
       },
+      streetAddressErrors() {
+        return this.surfaceErrors(this.$v.streetAddress, "street address");
+      },
       city: {
         get() {
           return this.$store.getters.city
@@ -159,6 +184,9 @@
         set(value) {
           this.$store.commit('updateCity', value)
         }
+      },
+      cityErrors() {
+        return this.surfaceErrors(this.$v.city, "city");
       },
       state: {
         get() {
@@ -168,6 +196,9 @@
           this.$store.commit('updateState', value)
         }
       },
+      stateErrors() {
+        return this.surfaceErrors(this.$v.state, "state");
+      },
       zipcode: {
         get() {
           return this.$store.getters.zipcode
@@ -175,6 +206,9 @@
         set(value) {
           this.$store.commit('updateZipcode', value)
         }
+      },
+      zipcodeErrors() {
+        return this.surfaceErrors(this.$v.zipcode, "zipcode");
       },
       
       stateAbbreviations() {
@@ -239,14 +273,18 @@
     },
     methods: {
       onSubmitClicked() {
-        console.log("Submitting")
-        //this.$emit("infoSubmitted", this.info)
-        this.$store.commit('nextStage')
+        this.$v.$touch();
+        if(!this.$v.$invalid) {
+          this.$store.commit('nextStage')
+        }
       },
+      surfaceErrors(validatorField, friendlyName) {
+        const errors = []
+        if (!validatorField.$dirty) return errors
+        !validatorField.required && errors.push(`Please enter your ${friendlyName}`)
+        return errors
+      }
     },
-    mounted: function() {
-      console.log('I am mounted');
-    }
   }
 </script>
 
