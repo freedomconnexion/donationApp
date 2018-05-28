@@ -5,13 +5,13 @@ const state = {
   amount: null,
   frequency: 'one-time',
   donationPanelState: 1,
-  firstName: 'Justin',
-  lastName: 'Hildebrandt',
-  email: 'jhilde@gmail.com',
-  streetAddress: '42 Regent Street',
-  city: 'Cambridge',
-  state: 'MA',
-  zipcode: '02140',
+  firstName: '',
+  lastName: '',
+  email: '',
+  streetAddress: '',
+  city: '',
+  state: '',
+  zipcode: '',
 }
 
 // getters
