@@ -1,14 +1,16 @@
 <template>
     <v-container>
       <p class="display-1">I want to give...</p>
-      <donation-amount-bar :currentAmount="donationAmount" :buttonAmounts="buttonAmounts" @amountChanged="onAmountChange" />    
-      <v-switch :input-value="recurringDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
-      <v-btn color="primary" @click.native="onSubmitClicked">Continue</v-btn>
+      <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
+      <v-switch :input-value="monthlyDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
+      <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
+      <v-btn color="primary" @click.native="onSubmitClicked"><v-icon>chevron-left</v-icon>Continue</v-btn>
       <v-btn >Cancel</v-btn>
     </v-container>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import DonationAmountBar from './DonationAmountBar';
   export default {
     components: {
@@ -16,44 +18,42 @@
     },
     data () {
       return {
-        donationAmount: null,
-        buttonAmounts: [5,10,15,20],
-        recurringDonation: false,
-        customDonationAmount: null,
+        errorPresent: false,
         title: 'Vuetify.js'
       }
     },
     computed: {
       donationAmounts() {
-        if(this.recurringDonation === true) {
+        if(this.monthlyDonation === true) {
           return [5,10,20,100]
         }
         return [25,50,100,1000];
-      }
+      },
+      monthlyDonation() {
+        return this.frequency === 'monthly';
+      },
+      ...mapGetters([
+      'amount',
+      'frequency',
+    ])
     },
     methods: {
       onFrequencyChange(event) {
-        this.recurringDonation = event
-        this.donationAmount = null
-        console.log(event)
+        this.$store.commit('setFrequency', event ? 'monthly' : 'one-time')
       },
       onSubmitClicked() {
-        console.log("Submitting")
-        this.$emit("amountSubmitted", this.donationAmount)
-      },
-      onAmountClicked(amount) {
-        console.log("Click amount")
-        this.donationAmount = amount;
-        this.customDonationAmount = null;
+        if(this.amount && this.amount > 10) {
+          this.$store.commit('nextStage');
+        }
+        else {
+          this.errorPresent = true;
+          //alert("choose amount")
+        }
       },
       onAmountChange(amount) {
-        console.log(amount)
-        this.donationAmount = amount;
+        this.$store.commit('setAmount', amount);
       },
     },
-    mounted: function() {
-      console.log('I am mounted');
-    }
   }
 </script>
 

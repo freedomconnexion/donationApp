@@ -14,13 +14,13 @@
               </v-stepper-header>
               <v-stepper-items>
                 <v-stepper-content step="1">
-                  <amount-card @amountSubmitted="onAmountSubmitted"/>
+                  <amount-card/>
                 </v-stepper-content>
                 <v-stepper-content step="2">
-                  <info-card @infoSubmitted="onInfoSubmitted"/>
+                  <info-card/>
                 </v-stepper-content>
                 <v-stepper-content step="3">
-                  <credit-card @nonceReceived="onNonceReceived"/>
+                  <credit-card/>
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
@@ -43,7 +43,6 @@
     data () {
       return {
         amountStepComplete: false,
-        currentStep: 1,
         editable: true,
         recurringDonation: false,
         collectingDonation: true,
@@ -51,18 +50,17 @@
       }
     },
     computed: {
+      currentStep: {
+        get() {
+          return this.$store.getters.donationPanelState;
+        },
+        set(value) {
+          this.$store.commit('setDonationPanelState', value)
+          console.log(`setting value to ${value}`)
+        }
+      }
     },
     methods: {
-      onAmountSubmitted(event) {
-        this.amountStepComplete = true;
-        this.currentStep = 2;
-        console.log("received amount submitted")
-      },
-      onInfoSubmitted(event) {
-        this.infoStepComplete = true;
-        this.currentStep = 3;
-        console.log("received info submitted")
-      },
       onNonceReceived(event) {
         console.log("Nonce received")
         this.collectingDonation = false;

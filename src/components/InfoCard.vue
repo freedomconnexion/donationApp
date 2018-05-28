@@ -2,33 +2,34 @@
     <v-container>
       <p class="display-1">About me...</p>
       <v-text-field
-        v-model="info.firstName"
+        v-model="firstName"
+        :value="firstName"
         placeholder="First Name"
         width="55"
       />
       <v-text-field
-        v-model="info.lastName"
+        v-model="lastName"
         placeholder="Last Name"
         width="55"
       />
       <v-text-field
-        v-model="info.email"
+        v-model="email"
         placeholder="Email Address"
         width="55"
       />
       <v-text-field
-        v-model="info.address1"
+        v-model="streetAddress"
         placeholder="Street Address"
         width="55"
       />
       <v-text-field
-        v-model="info.city"
+        v-model="city"
         placeholder="City"
         width="55"
       />
-      <v-select v-model="info.state" :items="stateAbbreviations" /> 
+      <v-select v-model="state" :items="stateAbbreviations" /> 
       <v-text-field
-        v-model="info.zipcode"
+        v-model="zipcode"
         placeholder="Zip Code"
         width="9"
       />
@@ -118,12 +119,64 @@
       }
     },
     computed: {
-      donationAmounts() {
-        if(this.recurringDonation === true) {
-          return [5,10,20,100]
+      firstName: {
+        get() {
+          console.log('i am getting got')
+          return this.$store.getters.firstName
+        },
+        set(value) {
+          this.$store.commit('updateFirstName', value)
         }
-        return [25,50,100,1000];
       },
+      lastName: {
+        get() {
+          return this.$store.getters.lastName
+        },
+        set(value) {
+          this.$store.commit('updateLastName', value)
+        }
+      },
+      email: {
+        get() {
+          return this.$store.getters.email
+        },
+        set(value) {
+          this.$store.commit('updateEmail', value)
+        }
+      },
+      streetAddress: {
+        get() {
+          return this.$store.getters.streetAddress
+        },
+        set(value) {
+          this.$store.commit('updateStreetAddress', value)
+        }
+      },
+      city: {
+        get() {
+          return this.$store.getters.city
+        },
+        set(value) {
+          this.$store.commit('updateCity', value)
+        }
+      },
+      state: {
+        get() {
+          return this.$store.getters.state
+        },
+        set(value) {
+          this.$store.commit('updateState', value)
+        }
+      },
+      zipcode: {
+        get() {
+          return this.$store.getters.zipcode
+        },
+        set(value) {
+          this.$store.commit('updateZipcode', value)
+        }
+      },
+      
       stateAbbreviations() {
         return [
     "AK",
@@ -187,7 +240,8 @@
     methods: {
       onSubmitClicked() {
         console.log("Submitting")
-        this.$emit("infoSubmitted", this.info)
+        //this.$emit("infoSubmitted", this.info)
+        this.$store.commit('nextStage')
       },
     },
     mounted: function() {
