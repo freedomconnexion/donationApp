@@ -1,23 +1,14 @@
 <template>
-  <v-container>
+  <v-container style={background-color: black}>
     <v-card>
       <v-card-title>
-        <span class="display-3">Your Donation...</span>
-        <span class="subheading">Thank you so much for your committment to our program! You can chose to give a one time gift or join the ranks of our sustaining givers by automatically giving each month.</span>
+        <h3 class="headline mb-0">Thank You!</h3>
       </v-card-title>
       <v-card-text>
-        <span class="title">Choose an amount by clicking on a button or entering in your own specific amount.</span>
-        <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
-        <v-switch v-if="false" :input-value="monthlyDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
-        <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
+        Hey thanks for your donation of ${{amount}}
+
+        Your transaction id is: {{transactionId}}
       </v-card-text>
-      <v-card-actions>
-        <v-layout>
-          <v-flex align-content-center>
-            <v-btn flat color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
-          </v-flex>
-        </v-layout>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
@@ -36,30 +27,23 @@
       }
     },
     computed: {
-      donationAmounts() {
-        if(this.monthlyDonation === true) {
-          return [5,10,20,100]
-        }
-        return [25,50,100,1000];
-      },
-      monthlyDonation() {
-        return this.frequency === 'monthly';
-      },
       ...mapGetters([
-      'amount',
-      'frequency',
-    ])
+        'amount',
+        'frequency',
+        'transactionId'
+      ])
     },
     methods: {
       onFrequencyChange(event) {
         this.$store.commit('setFrequency', event ? 'monthly' : 'one-time')
       },
-      onNextClicked() {
+      onSubmitClicked() {
         if(this.amount && this.amount > 10) {
           this.$store.commit('nextStage');
         }
         else {
           this.errorPresent = true;
+          //alert("choose amount")
         }
       },
       onAmountChange(amount) {

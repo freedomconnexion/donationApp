@@ -1,50 +1,66 @@
 <template>
-    <v-container>
-      <p class="display-1">About me...</p>
-      <v-text-field
-        v-model="firstName"
-        :error-messages="firstNameErrors"
-        placeholder="First Name"
-        width="55"
-      />
-      <v-text-field
-        v-model="lastName"
-        :error-messages="lastNameErrors"
-        placeholder="Last Name"
-        width="55"
-      />
-      <v-text-field
-        v-model="email"
-        :error-messages="emailErrors"
-        placeholder="Email Address"
-        width="55"
-      />
-      <v-text-field
-        v-model="streetAddress"
-        :error-messages="streetAddressErrors"
-        placeholder="Street Address"
-        width="55"
-      />
-      <v-text-field
-        v-model="city"
-        :error-messages="cityErrors"
-        placeholder="City"
-        width="55"
-      />
-      <v-select 
-        v-model="state" 
-        :error-messages="stateErrors"
-        :items="stateAbbreviations" 
-      /> 
-      <v-text-field
-        v-model="zipcode"
-        :error-messages="zipcodeErrors"
-        placeholder="Zip Code"
-        width="9"
-      />
-      <v-btn color="primary" @click.native="onSubmitClicked">Continue</v-btn>
-      <v-btn >Cancel</v-btn>
-    </v-container>
+  <v-container>
+    <v-card transition="v-slide-x-transition">
+      <v-card-title>
+        <span class="display-3">Your Info...</span>
+        <span class="subheading">Let us know a little about you so we can properly thank you and track your awesome donation.</span>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="firstName"
+          :error-messages="firstNameErrors"
+          placeholder="First Name"
+          width="55"
+        />
+        <v-text-field
+          v-model="lastName"
+          :error-messages="lastNameErrors"
+          placeholder="Last Name"
+          width="55"
+        />
+        <v-text-field
+          v-model="email"
+          :error-messages="emailErrors"
+          placeholder="Email Address"
+          width="55"
+        />
+        <v-text-field
+          v-model="streetAddress"
+          :error-messages="streetAddressErrors"
+          placeholder="Street Address"
+          width="55"
+        />
+        <v-flex>
+        <v-text-field
+          v-model="city"
+          :error-messages="cityErrors"
+          placeholder="City"
+          width="55"
+        />
+        <v-select 
+          autocomplete
+          v-model="state" 
+          :error-messages="stateErrors"
+          placeholder="State"
+          :items="stateAbbreviations" 
+        /> 
+        <v-text-field
+          v-model="zipcode"
+          :error-messages="zipcodeErrors"
+          placeholder="Zip Code"
+          width="9"
+        /></v-flex>
+      </v-card-text>
+      <v-card-actions>
+        <v-layout>
+          <v-flex align-content-center>
+            <v-btn flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
+            <v-btn flat color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
+          </v-flex>
+        </v-layout>
+      </v-card-actions>
+    </v-card>
+</v-container>
 </template>
 
 <script>
@@ -272,11 +288,14 @@
       }
     },
     methods: {
-      onSubmitClicked() {
+      onNextClicked() {
         this.$v.$touch();
         if(!this.$v.$invalid) {
           this.$store.commit('nextStage')
         }
+      },
+      onPreviousClicked() {
+        this.$store.commit('previousStage')
       },
       surfaceErrors(validatorField, friendlyName) {
         const errors = []

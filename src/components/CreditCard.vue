@@ -1,15 +1,33 @@
 <template>
   <v-container>
-    <hosted-fields
-      wrapperClass="constrain"
-      authToken="sandbox_7vqkj4hn_mf8q3dgpmrqmw6qz" 
-      v-on:bthferror="onBraintreeError" 
-      v-on:bthfpayload="onBraintreePayload" 
-      :collectCardHolderName="false" 
-      :collectPostalCode="false" 
-      :enableDataCollector="false"
-    ></hosted-fields>
-    <v-btn @click="onSubmitClick">Submit</v-btn>
+    <v-card ref="creditcardcard">
+      <v-card-title>
+        <span class="display-3">Payment Information...</span>
+      </v-card-title>
+      <v-card-text>
+        <p v-if="paymentProcessingState === 'errored'" class="body-1">
+          It looks like there was an error processing your payment. Please check your information and try again.
+        </p>
+        <hosted-fields ref="hostedfields"
+          v-if="braintreeToken"
+          wrapperClass="constrain"
+          :authToken="braintreeToken" 
+          v-on:bthferror="onBraintreeError" 
+          v-on:bthfpayload="onBraintreePayload" 
+          :collectCardHolderName="false" 
+          :collectPostalCode="false" 
+          :enableDataCollector="false"
+        />
+      </v-card-text>
+      <v-card-actions>
+        <v-layout>
+          <v-flex align-content-center>
+            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
+            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate</v-btn>
+          </v-flex>
+        </v-layout>
+      </v-card-actions>
+    </v-card>
   </v-container>
 </template>
 
@@ -19,34 +37,47 @@
     components: { HostedFields },
     data () {
       return {
-        clipped: false,
-        drawer: true,
-        fixed: false,
-        items: [
-          { icon: 'bubble_chart', title: 'Inspire' }
-        ],
-        miniVariant: false,
-        right: true,
-        rightDrawer: false,
+        processingPayment: false,
         title: 'Vuetify.js'
       }
     },
     methods: {
-      onBraintreeError() {
-        console.log('an error');
+      onBraintreeError(error) {
+        this.$store.commit('setPaymentProcessingState', 'errored');
+        this.$store.commit('serPaymentProcessingErrors', error);
       },
       onBraintreePayload(event) {
-        console.log('a payload');
-        console.log(event)
-        this.$emit('nonceReceived', event)
+        this.$emit('nonceReceived', event.nonce)
       },
-      onSubmitClick() {
-        this.$emit('tokenize');
-        console.log('submitting credit card');
+      onPreviousClicked() {
+        this.$store.commit('previousStage')
+      },
+      onDonateClicked() {
+        this.$refs.creditcardcard.$emit('tokenize');
+        this.$store.commit('setPaymentProcessingState', 'processing');
+      }
+    },
+    computed: {
+      braintreeToken() {
+        return this.$store.getters.braintreeToken;
+      },
+      paymentProcessingState() {
+        return this.$store.getters.paymentProcessingState;
+      },
+      paymentProcessing() {
+        return this.paymentProcessingState === 'processing';
+      }
+    },
+    watch: {
+      paymentProcessingState (newState, oldState) {
+        // Our fancy notification (2).
+        if(newState === 'errored') {
+          this.$refs.hostedfields.createBT();
+        }
       }
     },
     mounted: function() {
-      console.log('I am mounted');
+      this.$store.dispatch('fetchBraintreeToken');
     }
   }
 </script>
