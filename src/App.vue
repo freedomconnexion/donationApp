@@ -3,7 +3,7 @@
     <v-jumbotron src="/public/hero.jpg" height="100%">
     <v-layout row wrap>
       <v-flex xs12 height="15px" />
-      <v-flex xs12 md6 offset-md5>
+      <v-flex xs12 md6 offset-md6>
         <amount-card v-show="processState === 'amount'" />
         <info-card v-show="processState === 'info'" />
         <credit-card v-show="processState === 'payment'" @nonceReceived="onNonceReceived" />
@@ -11,12 +11,6 @@
       </v-flex>
     </v-layout>
     </v-jumbotron>
-    <v-footer fixed app>
-      <span>&copy; 2018</span>
-    </v-footer>
-    <v-snackbar
-    >{{emergencyMessage}}
-    </v-snackbar>>
   </v-app>
 </template>
 

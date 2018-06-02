@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-card transition="v-slide-x-transition">
-      <v-card-title>
-        <span class="display-3">Your Info...</span>
-        <span class="subheading">Let us know a little about you so we can properly thank you and track your awesome donation.</span>
-      </v-card-title>
+      <donation-card-title
+        quote="The question is not whether we can afford to invest in every child; it is whether we can afford not to."
+        author="Marian Wright Edelman"
+      />
       <v-card-text>
         <v-text-field
           v-model="firstName"
@@ -65,6 +65,8 @@
 
 <script>
   import DonationAmountBar from './DonationAmountBar';
+  import DonationCardTitle from './DonationCardTitle';
+
   import { required, minLength, email } from 'vuelidate/lib/validators';
   import _ from 'lodash';
   const stateNames = [
@@ -127,7 +129,8 @@
 
   export default {
     components: {
-      DonationAmountBar
+      DonationAmountBar,
+      DonationCardTitle,
     },
     data () {
       return {

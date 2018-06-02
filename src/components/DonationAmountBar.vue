@@ -1,8 +1,15 @@
 <template>
     <div>
       <v-layout row>
-      <v-flex xs12>
-        <v-btn large :outline="amount!==currentAmount" color="primary" v-for="amount in buttonAmounts" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
+      <v-flex xs3 v-for="amount in buttonAmountSet(0, 3)" :key="amount">
+        <v-btn large round :outline="amount!==currentAmount" color="primary" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
+          {{amount}}
+        </v-btn>
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs3 v-for="amount in buttonAmountSet(4, 8)" :key="amount">
+        <v-btn large round :outline="amount!==currentAmount" color="primary" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
           {{amount}}
         </v-btn>
       </v-flex>
@@ -46,6 +53,9 @@ export default {
     onClick() {
       this.$emit('click', this.amount)
     },
+    buttonAmountSet(start, end) {
+      return _.slice(this.buttonAmounts, start, end);
+    }
   },
   mounted: function() {
     console.log('I am mounted');

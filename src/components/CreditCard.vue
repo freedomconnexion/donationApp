@@ -1,9 +1,10 @@
 <template>
   <v-container>
     <v-card ref="creditcardcard">
-      <v-card-title>
-        <span class="display-3">Payment Information...</span>
-      </v-card-title>
+      <donation-card-title
+        quote="The question is not whether we can afford to invest in every child; it is whether we can afford not to."
+        author="Marian Wright Edelman"
+      />
       <v-card-text>
         <p v-if="paymentProcessingState === 'errored'" class="body-1">
           It looks like there was an error processing your payment. Please check your information and try again.
@@ -23,7 +24,7 @@
         <v-layout>
           <v-flex align-content-center>
             <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
-            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate</v-btn>
+            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate ${{donationAmount}}</v-btn>
           </v-flex>
         </v-layout>
       </v-card-actions>
@@ -33,8 +34,12 @@
 
 <script>
   import HostedFields from 'vue-braintree-hosted-fields'
+  import DonationCardTitle from './DonationCardTitle';
   export default {
-    components: { HostedFields },
+    components: { 
+      HostedFields,
+      DonationCardTitle,
+    },
     data () {
       return {
         processingPayment: false,
@@ -66,6 +71,9 @@
       },
       paymentProcessing() {
         return this.paymentProcessingState === 'processing';
+      },
+      donationAmount() {
+        return this.$store.getters.amount;
       }
     },
     watch: {

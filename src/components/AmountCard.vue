@@ -1,15 +1,22 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>
-        <span class="display-3">Your Donation...</span>
-        <span class="subheading">Thank you so much for your committment to our program! You can chose to give a one time gift or join the ranks of our sustaining givers by automatically giving each month.</span>
-      </v-card-title>
+      <donation-card-title
+        quote="The question is not whether we can afford to invest in every child; it is whether we can afford not to."
+        author="Marian Wright Edelman"
+      />
       <v-card-text>
-        <span class="title">Choose an amount by clicking on a button or entering in your own specific amount.</span>
-        <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
-        <v-switch v-if="false" :input-value="monthlyDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
-        <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
+        <span class="subheading">
+          <p>At Freedom Connexion we work to reduce the achivement gap between students from lower and higher income families.</p>
+            <p>We do this by engaging some pretty amazing Kindergarten - 5th grade students in a 6-week literacy and STEAM program rooted in the Civil Rights movement.</p>
+            <p>We're only able to do this at no cost to the families because of the generosity of <strong>people just like you</strong>.</p>
+            <p>Will you join us in bringing this program to our amazing scholars? <strong>Give generously today</strong></p>
+        </span>
+        <div align="center">
+          <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
+          <v-switch v-if="false" :input-value="monthlyDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
+          <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-layout>
@@ -25,9 +32,11 @@
 <script>
   import { mapGetters } from 'vuex'
   import DonationAmountBar from './DonationAmountBar';
+  import DonationCardTitle from './DonationCardTitle';
   export default {
     components: {
-      DonationAmountBar
+      DonationAmountBar,
+      DonationCardTitle,
     },
     data () {
       return {
@@ -40,7 +49,7 @@
         if(this.monthlyDonation === true) {
           return [5,10,20,100]
         }
-        return [25,50,100,1000];
+        return [10, 25, 50, 100, 150, 200, 500];
       },
       monthlyDonation() {
         return this.frequency === 'monthly';
@@ -55,7 +64,7 @@
         this.$store.commit('setFrequency', event ? 'monthly' : 'one-time')
       },
       onNextClicked() {
-        if(this.amount && this.amount > 10) {
+        if(this.amount && this.amount >= 10) {
           this.$store.commit('nextStage');
         }
         else {
