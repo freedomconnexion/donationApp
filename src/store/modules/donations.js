@@ -4,7 +4,6 @@ import donationAPI from '../../api/donation'
 const state = {
   amount: null,
   frequency: 'one-time',
-  donationPanelState: 1,
   firstName: '',
   lastName: '',
   email: '',
@@ -12,8 +11,6 @@ const state = {
   city: '',
   state: '',
   zipcode: '',
-  collectingDonations: true,
-  emergencyMessage: null,
   braintreeToken: null,
   transactionId: null,
   processState: 'amount',
@@ -25,7 +22,6 @@ const state = {
 const getters = {
   amount: state => state.amount,
   frequency: state => state.frequency,
-  donationPanelState: state => state.donationPanelState,
   firstName: state => state.firstName,
   lastName: state => state.lastName,
   email: state => state.email,
@@ -33,8 +29,6 @@ const getters = {
   city: state => state.city,
   state: state => state.state,
   zipcode: state => state.zipcode,
-  collectingDonations: state => state.collectingDonations,
-  emergencyMessage: state => state.emergencyMessage,
   braintreeToken: state => state.braintreeToken,
   transactionId: state => state.transactionId,
   processState: state => state.processState,
@@ -72,9 +66,6 @@ const actions = {
       }
     }
     catch(error) {
-      console.log('Got an error')
-      console.log(error)
-      commit('setEmergencyMessage', "Something went wrong!")
       commit('setPaymentProcessingState', 'errored')
     }
   },
@@ -86,7 +77,8 @@ const actions = {
       commit('setBraintreeToken', token)
     }
     catch(error) {
-      console.log(error)
+      // Do something more intelligent here?
+      // Retry?
     }
   },
 }
@@ -99,11 +91,7 @@ const mutations = {
   setFrequency(state, frequency) {
     state.frequency = frequency
   },
-  setPanelState(state, panelState) {
-    state.donationPanelState = panelState;
-  },
   nextStage(state) {
-    state.donationPanelState++;
     switch(state.processState) {
       case 'amount':
         state.processState = 'info';
@@ -114,7 +102,6 @@ const mutations = {
     }
   },
   previousStage(state) {
-    state.donationPanelState--;
     switch(state.processState) {
       case 'info':
         state.processState = 'amount';
@@ -144,15 +131,6 @@ const mutations = {
   },
   updateZipcode(state, value) {
     state.zipcode = value;
-  },
-  setDonationPanelState(state, value) {
-    state.donationPanelState = value;
-  },
-  setCollectingDonations(state, value) {
-    state.collectingDonations = value;
-  },
-  setEmergencyMessage(state, value) {
-    state.emergencyMessage = value;
   },
   setBraintreeToken(state, value) {
     state.braintreeToken = value;

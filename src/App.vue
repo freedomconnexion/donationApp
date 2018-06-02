@@ -15,53 +15,29 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import CreditCard from './components/CreditCard';
   import InfoCard from './components/InfoCard';
   import AmountCard from './components/AmountCard';
   import ThankYouCard from './components/ThankYouCard';
 
+
   export default {
     components: { AmountCard, InfoCard, CreditCard, ThankYouCard },
     data () {
       return {
-        amountStepComplete: false,
-        editable: true,
-        recurringDonation: false,
-        title: 'Vuetify.js'
+        title: 'App.vue'
       }
     },
     computed: {
-      currentStep: {
-        get() {
-          return this.$store.getters.donationPanelState;
-        },
-        set(value) {
-          this.$store.commit('setDonationPanelState', value)
-          console.log(`setting value to ${value}`)
-        }
-      },
-      collectingDonations() {
-        return this.$store.getters.collectingDonations;
-      },
-      emergencyMessage() {
-        return this.$store.getters.emergencyMessage
-      },
-      processState() {
-        return this.$store.getters.processState;
-      }
+      ...mapGetters([
+        'processState',
+      ])
     },
     methods: {
       onNonceReceived(nonce) {
-        console.log("Nonce received")
         this.$store.dispatch('processDonation', nonce)
-        this.collectingDonation = false;
       },
-      onHeaderClick(event) {
-        console.log("header")
-        console.log(event)
-      }
     },
-    mounted: function() {
-    }
   }
 </script>

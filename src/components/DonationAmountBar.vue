@@ -35,7 +35,7 @@ export default {
   props: ["currentAmount", "buttonAmounts"],
   data () {
     return {
-      title: 'Vuetify.js'
+      title: 'DonationAmountBar.vue'
     }
   },
   computed: {
@@ -50,15 +50,9 @@ export default {
     onAmountChanged(amount) {
       this.$emit('amountChanged', parseFloat(amount));
     },
-    onClick() {
-      this.$emit('click', this.amount)
-    },
     buttonAmountSet(start, end) {
       return _.slice(this.buttonAmounts, start, end);
     }
   },
-  mounted: function() {
-    console.log('I am mounted');
-  }
 }
 </script>

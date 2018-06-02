@@ -15,8 +15,8 @@
           :authToken="braintreeToken" 
           v-on:bthferror="onBraintreeError" 
           v-on:bthfpayload="onBraintreePayload" 
-          :collectCardHolderName="false" 
-          :collectPostalCode="false" 
+          :collectCardHolderName="true" 
+          :collectPostalCode="true" 
           :enableDataCollector="false"
         />
       </v-card-text>
@@ -24,7 +24,7 @@
         <v-layout>
           <v-flex align-content-center>
             <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
-            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate ${{donationAmount}}</v-btn>
+            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate ${{amount}}</v-btn>
           </v-flex>
         </v-layout>
       </v-card-actions>
@@ -34,7 +34,9 @@
 
 <script>
   import HostedFields from 'vue-braintree-hosted-fields'
+  import { mapGetters } from 'vuex';
   import DonationCardTitle from './DonationCardTitle';
+  
   export default {
     components: { 
       HostedFields,
@@ -42,16 +44,16 @@
     },
     data () {
       return {
-        processingPayment: false,
-        title: 'Vuetify.js'
+        title: 'CreditCard.vue'
       }
     },
     methods: {
       onBraintreeError(error) {
         this.$store.commit('setPaymentProcessingState', 'errored');
-        this.$store.commit('serPaymentProcessingErrors', error);
+        this.$store.commit('setPaymentProcessingErrors', error);
       },
       onBraintreePayload(event) {
+        console.log(event)
         this.$emit('nonceReceived', event.nonce)
       },
       onPreviousClicked() {
@@ -63,22 +65,19 @@
       }
     },
     computed: {
-      braintreeToken() {
-        return this.$store.getters.braintreeToken;
-      },
-      paymentProcessingState() {
-        return this.$store.getters.paymentProcessingState;
-      },
       paymentProcessing() {
         return this.paymentProcessingState === 'processing';
       },
-      donationAmount() {
-        return this.$store.getters.amount;
-      }
+      ...mapGetters([
+        'paymentProcessingState',
+        'braintreeToken',
+        'amount',
+      ])
     },
     watch: {
       paymentProcessingState (newState, oldState) {
-        // Our fancy notification (2).
+        // Work around that vue-hosted-fields destroys the 
+        // instance before we know there are no errors from the server.
         if(newState === 'errored') {
           this.$refs.hostedfields.createBT();
         }

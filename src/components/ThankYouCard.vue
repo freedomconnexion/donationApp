@@ -29,7 +29,7 @@
     },
     data () {
       return {
-        title: 'Vuetify.js'
+        title: 'ThankYouCard.vue'
       }
     },
     computed: {

@@ -14,7 +14,6 @@
         </span>
         <div align="center">
           <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
-          <v-switch v-if="false" :input-value="monthlyDonation" label="Monthly" @change="onFrequencyChange"></v-switch>
           <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
         </div>
       </v-card-text>
@@ -41,28 +40,18 @@
     data () {
       return {
         errorPresent: false,
-        title: 'Vuetify.js'
+        title: 'AmountCard.vue'
       }
     },
     computed: {
       donationAmounts() {
-        if(this.monthlyDonation === true) {
-          return [5,10,20,100]
-        }
         return [10, 25, 50, 100, 150, 200, 500];
       },
-      monthlyDonation() {
-        return this.frequency === 'monthly';
-      },
       ...mapGetters([
-      'amount',
-      'frequency',
-    ])
+        'amount',
+      ])
     },
     methods: {
-      onFrequencyChange(event) {
-        this.$store.commit('setFrequency', event ? 'monthly' : 'one-time')
-      },
       onNextClicked() {
         if(this.amount && this.amount >= 10) {
           this.$store.commit('nextStage');
