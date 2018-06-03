@@ -39,5 +39,10 @@
         this.$store.dispatch('processDonation', nonce)
       },
     },
+    watch: {
+      processState (newState, oldState) {
+        this.$vuetify.goTo(0);
+      }
+    },
   }
 </script>

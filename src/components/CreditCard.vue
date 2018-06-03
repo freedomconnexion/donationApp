@@ -80,6 +80,7 @@
         // instance before we know there are no errors from the server.
         if(newState === 'errored') {
           this.$refs.hostedfields.createBT();
+          this.$vuetify.goTo(0);
         }
       }
     },
