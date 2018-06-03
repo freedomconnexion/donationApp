@@ -11,6 +11,7 @@
         <v-flex sm4 xs6 offset-sm1 offset-xs2 text-xs-center align-center align-content-center>
           <v-text-field
           :value="customAmount"
+          type="number"
           placeholder="Other Amount"
           prefix="$"
           width="55"
@@ -38,14 +39,17 @@ export default {
   },
   methods: {
     onAmountClicked(amount) { 
-      this.$emit('amountChanged', amount);
+      this.$emit('amountChanged', amount, true);
     },
     onAmountChanged(amount) {
-      this.$emit('amountChanged', parseFloat(amount));
+      const re = /^([1-9]{1}[0-9]{0,}(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|\.[0-9]{1,2})$/
+      const valid = re.test(amount);
+
+      this.$emit('amountChanged', amount, valid);
     },
     buttonAmountSet(start, end) {
       return _.slice(this.buttonAmounts, start, end);
-    }
-  },
+    },
+  }
 }
 </script>

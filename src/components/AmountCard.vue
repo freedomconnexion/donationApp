@@ -19,7 +19,7 @@
             </v-flex>
             <v-flex xs11>  
               <p class="subheading white--text">
-                Please be sure to enter an amount greater than our minimum donation of $10.00.
+                Please enter an valid donation amount greater than our minimum donation of $10.00.
               </p>
             </v-flex>
           </v-layout>
@@ -72,16 +72,16 @@
     },
     methods: {
       onNextClicked() {
-        if(this.amount && this.amount >= 10) {
-          this.errorPresent = false;
+        if(!this.errorPresent && this.amount && this.amount >= 10) {
           this.$store.commit('nextStage');
         }
         else {
           this.errorPresent = true;
         }
       },
-      onAmountChange(amount) {
+      onAmountChange(amount, valid) {
         this.$store.commit('setAmount', amount);
+        this.errorPresent = !valid;
       },
     },
   }
