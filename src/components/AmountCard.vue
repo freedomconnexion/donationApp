@@ -12,15 +12,34 @@
             <p>We're only able to do this at no cost to the families because of the generosity of <strong>people just like you</strong>.</p>
             <p>Will you join us in bringing this program to our amazing scholars? <strong>Give generously today</strong></p>
         </span>
-        <div align="center">
+        <v-container red darken-4 v-if="errorPresent">
+          <v-layout row wrap align-center>
+            <v-flex xs1>
+              <v-icon x-large color="white">warning</v-icon>
+            </v-flex>
+            <v-flex xs11>  
+              <p class="subheading white--text">
+                Please be sure to enter an amount greater than our minimum donation of $10.00.
+              </p>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <v-divider />
+        <v-container>
+          <v-layout align-center>
+            <v-flex class='text-xs-center'>
+              <p class="title">
+                Please select an amount:
+              </p>
+            </v-flex>
+          </v-layout>
           <donation-amount-bar :currentAmount="amount" :buttonAmounts="donationAmounts" @amountChanged="onAmountChange" />    
-          <p v-show="errorPresent" class="error">Please be sure to select a donation amnount greater than $10</p>
-        </div>
+        </v-container>
       </v-card-text>
       <v-card-actions>
-        <v-layout>
-          <v-flex align-content-center>
-            <v-btn flat color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
+        <v-layout row wrap align-center>
+          <v-flex class='text-xs-center'>
+            <v-btn round large color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
           </v-flex>
         </v-layout>
       </v-card-actions>
@@ -45,7 +64,7 @@
     },
     computed: {
       donationAmounts() {
-        return [10, 25, 50, 100, 150, 200, 500];
+        return [25, 50, 100, 250, 500, 1000];
       },
       ...mapGetters([
         'amount',
@@ -54,6 +73,7 @@
     methods: {
       onNextClicked() {
         if(this.amount && this.amount >= 10) {
+          this.errorPresent = false;
           this.$store.commit('nextStage');
         }
         else {

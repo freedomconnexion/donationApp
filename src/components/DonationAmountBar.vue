@@ -1,31 +1,24 @@
 <template>
-    <div>
-      <v-layout row>
-      <v-flex xs3 v-for="amount in buttonAmountSet(0, 3)" :key="amount">
-        <v-btn large round :outline="amount!==currentAmount" color="primary" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
-          {{amount}}
-        </v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout row>
-      <v-flex xs3 v-for="amount in buttonAmountSet(4, 8)" :key="amount">
-        <v-btn large round :outline="amount!==currentAmount" color="primary" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
-          {{amount}}
-        </v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout row>
-      <v-flex xs4>
-        <v-text-field
+    <v-container>
+      <v-layout row wrap align-center>
+        <v-flex sm4 xs2 text-xs-center v-for="amount in buttonAmounts" :key="amount">
+          <v-btn large round :outline="amount!==currentAmount" color="primary" :key="amount" :selected="amount===currentAmount" @click="onAmountClicked(amount)">
+          ${{amount}}
+          </v-btn>
+        </v-flex>
+      </v-layout>
+      <v-layout row wrap align-center>
+        <v-flex sm4 xs6 offset-sm1 offset-xs2 text-xs-center align-center align-content-center>
+          <v-text-field
           :value="customAmount"
           placeholder="Other Amount"
           prefix="$"
           width="55"
           @change="onAmountChanged"
         />
-      </v-flex>
-    </v-layout>
-    </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
 </template>
 
 <script>
@@ -41,7 +34,7 @@ export default {
   computed: {
     customAmount() {
       return _.includes(this.buttonAmounts, this.currentAmount) ? "" : this.currentAmount;
-    }
+    },
   },
   methods: {
     onAmountClicked(amount) { 

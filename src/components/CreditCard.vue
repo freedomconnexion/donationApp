@@ -6,11 +6,29 @@
         author="Marian Wright Edelman"
       />
       <v-card-text>
-        <p v-if="paymentProcessingState === 'errored'" class="body-1">
-          It looks like there was an error processing your payment. Please check your information and try again.
-        </p>
+        <v-layout row wrap align-center v-if="paymentProcessing">
+          <v-flex class="text-xs-center">  
+            <p class="display-1">
+              Processing your credit card...
+            </p>
+            <v-progress-circular indeterminate color="primary" size="58"></v-progress-circular>
+          </v-flex>
+        </v-layout>
+        <v-container red darken-4 v-if="paymentProcessingState === 'errored'">
+          <v-layout row wrap align-center>
+            <v-flex xs1>
+              <v-icon x-large color="white">warning</v-icon>
+            </v-flex>
+            <v-flex xs11>  
+              <p class="subheading white--text">
+                It looks like there was an error processing your payment. Please check your information and try again.
+              </p>
+            </v-flex>
+          </v-layout>
+        </v-container>
         <hosted-fields ref="hostedfields"
           v-if="braintreeToken"
+          v-show="!paymentProcessing"
           wrapperClass="constrain"
           :authToken="braintreeToken" 
           v-on:bthferror="onBraintreeError" 
@@ -21,10 +39,12 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-layout>
-          <v-flex align-content-center>
-            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
-            <v-btn :disabled="paymentProcessing" flat color="primary" @click.native="onDonateClicked">Donate ${{amount}}</v-btn>
+        <v-layout row wrap align-center>
+          <v-flex xs3>
+            <v-btn v-show="!paymentProcessing" flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
+          </v-flex>
+          <v-flex xs6 class="text-xs-center">  
+            <v-btn round large v-show="!paymentProcessing" color="primary" @click.native="onDonateClicked">Donate ${{amount}}</v-btn>
           </v-flex>
         </v-layout>
       </v-card-actions>

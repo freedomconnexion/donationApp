@@ -9,7 +9,7 @@
         <h2>Thank you for your donation</h2>
         <p>Thank you very much for your generous gift to Connexion on behalf of Freedom Connexion. We truly value your support for the work we do to provide a safe, fun, enriching environment for children during the summer.</p> 
         <p>This receipt certifies that you have made this donation as a charitable contribution and that you are not receiving any goods or services in return.</p>
-        <p>Your donation of {{amount}} is tax deductible to the extent allowed by law.</p>
+        <p>Your donation of {{amount | currency}} is tax deductible to the extent allowed by law.</p>
         <br/>
         <p>Justin Hildebrandt</p>
         <p>Executive Director, Freedom Connexion</p>

@@ -52,10 +52,12 @@
         /></v-flex>
       </v-card-text>
       <v-card-actions>
-        <v-layout>
-          <v-flex align-content-center>
+        <v-layout row wrap align-center>
+          <v-flex xs3>
             <v-btn flat color="primary" @click.native="onPreviousClicked"><v-icon>chevron_left</v-icon> Previous</v-btn>
-            <v-btn flat color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
+          </v-flex>
+          <v-flex xs6 class='text-xs-center'>
+             <v-btn round large color="primary" @click.native="onNextClicked">Next <v-icon>chevron_right</v-icon></v-btn>
           </v-flex>
         </v-layout>
       </v-card-actions>
